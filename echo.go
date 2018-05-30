@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"strings"
 
 	"github.com/whyrusleeping/hellabot"
@@ -20,7 +21,7 @@ var EchoTrigger = hbot.Trigger{
 			return true
 		}
 		if num > 3 {
-			bot.Reply(msg, "fuck off")
+			bot.Reply(msg, fmt.Sprintf("%s: fuck off", msg.From))
 			return true
 		}
 		response := strings.Join(fset.Args(), " ")
