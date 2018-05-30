@@ -11,6 +11,13 @@ import (
 	"github.com/whyrusleeping/hellabot"
 )
 
+func Usage(fset *flag.FlagSet) string {
+	var usage bytes.Buffer
+	fset.SetOutput(&usage)
+	fset.Usage()
+	return usage.String()
+}
+
 func ParseFlags(msg *hbot.Message, fset *flag.FlagSet) error {
 	args, err := shellquote.Split(msg.Content)
 	if err != nil {
@@ -23,10 +30,7 @@ func ParseFlags(msg *hbot.Message, fset *flag.FlagSet) error {
 		return nil
 	}
 	if err == flag.ErrHelp {
-		var usage bytes.Buffer
-		fset.SetOutput(&usage)
-		fset.Usage()
-		return errors.New(usage.String())
+		return errors.New(Usage(fset))
 	}
 	return err
 }

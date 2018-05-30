@@ -13,7 +13,7 @@ var EchoTrigger = hbot.Trigger{
 	},
 	Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 		var num int
-		fset := flag.NewFlagSet("", flag.ContinueOnError)
+		fset := flag.NewFlagSet("echo", flag.ContinueOnError)
 		fset.IntVar(&num, "n", 1, "number of times to repeat")
 		if err := ParseFlags(msg, fset); err != nil {
 			MultiLineReply(bot, msg, err.Error())
