@@ -38,6 +38,8 @@ func main() {
 	bot.AddTrigger(rd.Trigger())
 
 	go func() {
+		// TODO: find a way to detect when the bot has
+		//       successfully connected.
 		time.Sleep(time.Second * 10)
 		rd.Run(bot)
 	}()
