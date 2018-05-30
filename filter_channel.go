@@ -8,7 +8,6 @@ import (
 func FilterChannel(channel string) hbot.Trigger {
 	return hbot.Trigger{
 		Condition: func(bot *hbot.Bot, msg *hbot.Message) bool {
-			fmt.Printf("%#v\n", msg.Message)
 			return msg.To != channel
 		},
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
