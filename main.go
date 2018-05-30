@@ -16,7 +16,7 @@ var (
 
 func init() {
 	flag.StringVar(&host, "addr", "irc.freenode.net:6667", "irc server address")
-	flag.StringVar(&nick, "nick", "icholy_bot", "nick to use")
+	flag.StringVar(&nick, "nick", "softwareniagara_bot", "nick to use")
 	flag.StringVar(&channel, "chan", "#softwareniagara_bot", "channel to join")
 	flag.Parse()
 }
