@@ -37,6 +37,7 @@ func main() {
 	bot.AddTrigger(FilterChannel(channel))
 	bot.AddTrigger(EchoTrigger)
 	bot.AddTrigger(rd.Trigger())
+	bot.AddTrigger(Responder(nick))
 
 	go func() {
 		// TODO: find a way to detect when the bot has
