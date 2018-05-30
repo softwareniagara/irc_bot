@@ -19,9 +19,19 @@ var EchoTrigger = hbot.Trigger{
 			MultiLineReply(bot, msg, err.Error())
 			return true
 		}
+		var target string
+		if strings.Contains(msg.To, "#") {
+			target = msg.To
+			if num > 3 {
+				bot.Reply(msg, "sending as private message XD")
+				target = msg.From
+			}
+		} else {
+			target = msg.From
+		}
 		response := strings.Join(fset.Args(), " ")
 		for i := 0; i < num; i++ {
-			bot.Reply(msg, response)
+			bot.Msg(target, response)
 		}
 		return true
 	},
