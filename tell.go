@@ -18,7 +18,7 @@ var TellTrigger = hbot.Trigger{
 			bot.Reply(msg, fmt.Sprintf("%s: Say what?", msg.From))
 			return true
 		}
-		text := fields[0] + ":" + strings.Join(fields[1:], " ")
+		text := fields[0] + ": " + strings.Join(fields[1:], " ")
 		bot.Reply(msg, text)
 		return true
 	},
