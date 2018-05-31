@@ -76,7 +76,7 @@ func (u User) String() string {
 	default:
 		active = fmt.Sprintf("%s ago", time.Since(u.LastActive))
 	}
-	return fmt.Sprintf("nick=%s role=%s active=%s ago", u.Nick, u.Role, active)
+	return fmt.Sprintf("nick=%s role=%s active=%s", u.Nick, u.Role, active)
 }
 
 const createUserSQL = `
