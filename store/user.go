@@ -88,6 +88,6 @@ const removeUserSQL = `
 `
 
 func (s *Store) RemoveUser(rowID int64) error {
-	_, err := s.db.Exec(removeUserSQL)
+	_, err := s.db.Exec(removeUserSQL, rowID)
 	return err
 }
