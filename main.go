@@ -15,6 +15,7 @@ var (
 	nick    string
 	channel string
 	dbname  string
+	admin   string
 )
 
 func init() {
@@ -22,6 +23,7 @@ func init() {
 	flag.StringVar(&nick, "nick", "jimmy_38545", "nick to use")
 	flag.StringVar(&channel, "chan", "#softwareniagara", "channel to join")
 	flag.StringVar(&dbname, "dbname", "bot.db", "database filename")
+	flag.StringVar(&admin, "admin", "", "create an admin user with this nick")
 	flag.Parse()
 }
 
@@ -31,6 +33,16 @@ func main() {
 		log.Fatal(err)
 	}
 	defer s.Close()
+
+	if admin != "" {
+		if err := s.InsertUser(&store.User{
+			Nick: admin,
+			Role: store.RoleAdmin,
+		}); err != nil {
+			log.Fatal(err)
+		}
+		return
+	}
 
 	bot, err := hbot.NewBot(host, nick)
 	if err != nil {

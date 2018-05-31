@@ -15,7 +15,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 
 			if err := s.Authorized(msg.From, store.RoleAdmin); err != nil {
-				ReplyTo(bot, msg, "no can do")
+				ErrorReply(bot, msg, err)
 				return true
 			}
 

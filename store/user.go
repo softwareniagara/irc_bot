@@ -67,20 +67,23 @@ type User struct {
 }
 
 func (u User) String() string {
-	if u.Active {
-		return fmt.Sprintf("nick=%s role=%s active=now")
+	var active string
+	switch {
+	case u.Active:
+		active = "now"
+	case u.LastActive.IsZero():
+		active = "unknown"
+	default:
+		active = fmt.Sprintf("%s ago", time.Since(u.LastActive))
 	}
-	if u.LastActive.IsZero() {
-		return fmt.Sprintf("nick=%s role=%s active=unknown")
-	}
-	return fmt.Sprintf("nick=%s role=%s active=%s ago", time.Since(u.LastActive))
+	return fmt.Sprintf("nick=%s role=%s active=%s ago", u.Nick, u.Role, active)
 }
 
 const createUserSQL = `
 	CREATE TABLE IF NOT EXISTS users (
 		nick        TEXT UNIQUE,
-		role        INTEGER
-		active      BOOLEAN
+		role        INTEGER,
+		active      BOOLEAN,
 		last_active TIMESTAMP
 	)
 `
@@ -115,8 +118,8 @@ func (s *Store) InsertUser(u *User) error {
 const updateUserSQL = `
 	UPDATE users
 	SET nick = ?,
-	    role = ?
-			active = ?
+	    role = ?,
+			active = ?,
 			last_active = ?
   WHERE ROWID = ?
 `
