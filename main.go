@@ -39,6 +39,7 @@ func main() {
 	bot.Channels = []string{channel}
 	bot.ThrottleDelay = time.Second
 	bot.AddTrigger(FilterChannel(channel))
+	bot.AddTrigger(ActivityTrigger(s))
 	bot.AddTrigger(TellTrigger)
 	bot.AddTrigger(EchoTrigger)
 	bot.AddTrigger(ReminderTrigger(s))
