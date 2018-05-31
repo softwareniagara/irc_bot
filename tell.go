@@ -7,7 +7,7 @@ import (
 )
 
 var TellTrigger = hbot.Trigger{
-	Condition: HasPrefix("!tell"),
+	Condition: HasCommand("!tell"),
 	Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 		content := strings.TrimPrefix(msg.Content, "!tell")
 		fields := strings.Fields(content)

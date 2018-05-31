@@ -45,8 +45,7 @@ func main() {
 	bot.AddTrigger(TellTrigger)
 	bot.AddTrigger(EchoTrigger)
 	bot.AddTrigger(rd.Trigger())
-	bot.AddTrigger(um.AddUserTrigger())
-	bot.AddTrigger(um.RemoveUserTrigger())
+	bot.AddTrigger(um.Trigger())
 	bot.AddTrigger(Responder(nick))
 
 	go func() {

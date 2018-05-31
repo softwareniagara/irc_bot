@@ -1,13 +1,56 @@
 package store
 
+import (
+	"fmt"
+)
+
 type Role int
 
 const (
-	RoleAdmin Role = iota
+	RoleInvalid Role = iota
+	RoleAdmin
 	RoleUser
-	RoleBanned
 	RoleIdiot
+	RoleBanned
 )
+
+func (r Role) String() string {
+	switch r {
+	case RoleAdmin:
+		return "admin"
+	case RoleUser:
+		return "user"
+	case RoleIdiot:
+		return "idiot"
+	case RoleBanned:
+		return "banned"
+	default:
+		return "invalid"
+	}
+}
+
+func (r *Role) Set(s string) error {
+	*r = RoleFromString(s)
+	if *r == RoleInvalid {
+		return fmt.Errorf("invalid role: %s", s)
+	}
+	return nil
+}
+
+func RoleFromString(s string) Role {
+	switch s {
+	case "admin":
+		return RoleAdmin
+	case "user":
+		return RoleUser
+	case "idiot":
+		return RoleIdiot
+	case "banned":
+		return RoleBanned
+	default:
+		return RoleInvalid
+	}
+}
 
 type User struct {
 	RowID int64

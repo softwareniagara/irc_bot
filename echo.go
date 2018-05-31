@@ -8,7 +8,7 @@ import (
 )
 
 var EchoTrigger = hbot.Trigger{
-	Condition: HasPrefix("!echo"),
+	Condition: HasCommand("!echo"),
 	Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 		var num int
 		fset := flag.NewFlagSet("echo", flag.ContinueOnError)

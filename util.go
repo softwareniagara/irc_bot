@@ -55,6 +55,16 @@ func HasPrefix(prefix string) func(*hbot.Bot, *hbot.Message) bool {
 	}
 }
 
+func HasCommand(command string) func(*hbot.Bot, *hbot.Message) bool {
+	return func(bot *hbot.Bot, msg *hbot.Message) bool {
+		words, err := shellquote.Split(msg.Content)
+		if err != nil || len(words) == 0 {
+			return false
+		}
+		return strings.TrimSpace(words[0]) == command
+	}
+}
+
 func ReplyTo(bot *hbot.Bot, msg *hbot.Message, s string) {
 	bot.Reply(msg, fmt.Sprintf("%s: %s", msg.From, s))
 }
