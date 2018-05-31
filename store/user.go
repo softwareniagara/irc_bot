@@ -72,15 +72,17 @@ const insertUserSQL = `
 	) VALUES (?, ?)
 `
 
-func (s *Store) Authorized(nick string, role Role) error {
+func (s *Store) Authorized(nick string, roles ...Role) error {
 	u, err := s.FindUserByNick(nick)
 	if err != nil {
 		return err
 	}
-	if u.Role != role {
-		return fmt.Errorf("invalid role: %s", u.Role)
+	for _, r := range roles {
+		if u.Role == r {
+			return nil
+		}
 	}
-	return nil
+	return fmt.Errorf("invalid role: %s", u.Role)
 }
 
 func (s *Store) InsertUser(u *User) error {

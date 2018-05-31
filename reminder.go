@@ -44,30 +44,34 @@ func (rd *ReminderDB) Run(bot *hbot.Bot) {
 	}
 }
 
-func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
-	var dur time.Duration
-	fset := flag.NewFlagSet("remindme", flag.ContinueOnError)
-	fset.DurationVar(&dur, "d", 0, "how long to wait before reminding")
-	if err := ParseFlags(msg, fset); err != nil {
-		ErrorReply(bot, msg, err)
-		return true
+func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) error {
+	if err := rd.s.Authorized(msg.From, store.RoleUser, store.RoleUser); err != nil {
+		return err
 	}
-	if err := rd.s.InsertReminder(&store.Reminder{
-		Time:    time.Now().Add(dur),
+	var wait time.Duration
+	fset := flag.NewFlagSet("remindme", flag.ContinueOnError)
+	fset.DurationVar(&wait, "wait", 0, "how long to wait before reminding")
+	if err := ParseFlags(msg, fset); err != nil {
+		return err
+	}
+	return rd.s.InsertReminder(&store.Reminder{
+		Time:    time.Now().Add(wait),
 		Created: time.Now(),
 		Nick:    msg.From,
 		Msg:     strings.Join(fset.Args(), " "),
-	}); err != nil {
-		ErrorReply(bot, msg, err)
-		return true
-	}
-	ReplyTo(bot, msg, "ok")
-	return true
+	})
 }
 
 func (rd *ReminderDB) Trigger() hbot.Trigger {
 	return hbot.Trigger{
 		Condition: HasPrefix("!remindme"),
-		Action:    rd.action,
+		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
+			if err := rd.action(bot, msg); err != nil {
+				ErrorReply(bot, msg, err)
+			} else {
+				ReplyTo(bot, msg, "ok")
+			}
+			return true
+		},
 	}
 }
