@@ -9,10 +9,6 @@ import (
 	"github.com/softwareniagara/irc_bot/store"
 )
 
-type UserManager struct {
-	s *store.Store
-}
-
 func UserTrigger(s *store.Store) hbot.Trigger {
 	return hbot.Trigger{
 		Condition: HasPrefix("!user"),
