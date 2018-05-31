@@ -32,8 +32,6 @@ func main() {
 	}
 	defer s.Close()
 
-	rd := NewReminderDB(s, channel)
-
 	bot, err := hbot.NewBot(host, nick)
 	if err != nil {
 		log.Fatal(err)
@@ -43,7 +41,7 @@ func main() {
 	bot.AddTrigger(FilterChannel(channel))
 	bot.AddTrigger(TellTrigger)
 	bot.AddTrigger(EchoTrigger)
-	bot.AddTrigger(rd.Trigger())
+	bot.AddTrigger(ReminderTrigger(s))
 	bot.AddTrigger(UserTrigger(s))
 	bot.AddTrigger(Responder(nick))
 
@@ -51,7 +49,7 @@ func main() {
 		// TODO: find a way to detect when the bot has
 		//       successfully connected.
 		time.Sleep(time.Second * 10)
-		rd.Run(bot)
+		ReminderNotifyLoop(bot, s, channel)
 	}()
 
 	bot.Run()
