@@ -2,6 +2,7 @@ package store
 
 import (
 	"fmt"
+	"time"
 )
 
 type Role int
@@ -12,6 +13,7 @@ const (
 	RoleUser
 	RoleIdiot
 	RoleBanned
+	RoleNone
 )
 
 func (r Role) String() string {
@@ -24,6 +26,8 @@ func (r Role) String() string {
 		return "idiot"
 	case RoleBanned:
 		return "banned"
+	case RoleNone:
+		return "none"
 	default:
 		return "invalid"
 	}
@@ -47,29 +51,37 @@ func RoleFromString(s string) Role {
 		return RoleIdiot
 	case "banned":
 		return RoleBanned
+	case "none":
+		return RoleNone
 	default:
 		return RoleInvalid
 	}
 }
 
 type User struct {
-	RowID int64
-	Nick  string
-	Role  Role
+	RowID      int64
+	Nick       string
+	Role       Role
+	Active     bool
+	LastActive time.Time
 }
 
 const createUserSQL = `
 	CREATE TABLE IF NOT EXISTS users (
-		nick TEXT UNIQUE,
-		role INTEGER
+		nick        TEXT UNIQUE,
+		role        INTEGER
+		active      BOOLEAN
+		last_active TIMESTAMP
 	)
 `
 
 const insertUserSQL = `
 	INSERT INTO users (
 		nick,
-		role
-	) VALUES (?, ?)
+		role,
+		active,
+		last_active
+	) VALUES (?, ?, ?, ?)
 `
 
 func (s *Store) Authorized(nick string, roles ...Role) error {
@@ -86,7 +98,7 @@ func (s *Store) Authorized(nick string, roles ...Role) error {
 }
 
 func (s *Store) InsertUser(u *User) error {
-	_, err := s.db.Exec(insertUserSQL, u.Nick, u.Role)
+	_, err := s.db.Exec(insertUserSQL, u.Nick, u.Role, u.Active, u.LastActive)
 	return err
 }
 
@@ -94,16 +106,18 @@ const updateUserSQL = `
 	UPDATE users
 	SET nick = ?,
 	    role = ?
+			active = ?
+			last_active = ?
   WHERE ROWID = ?
 `
 
 func (s *Store) UpdateUser(u *User) error {
-	_, err := s.db.Exec(updateUserSQL, u.Nick, u.Role, u.RowID)
+	_, err := s.db.Exec(updateUserSQL, u.Nick, u.Role, u.Active, u.LastActive, u.RowID)
 	return err
 }
 
 const findUserByNickSQL = `
-	SELECT ROWID, nick, role
+	SELECT ROWID, nick, role, active, last_active
 	FROM users
 	WHERE nick = ?
 `
@@ -114,6 +128,8 @@ func (s *Store) FindUserByNick(nick string) (*User, error) {
 		&u.RowID,
 		&u.Nick,
 		&u.Role,
+		&u.Active,
+		&u.LastActive,
 	); err != nil {
 		return nil, err
 	}
@@ -121,7 +137,7 @@ func (s *Store) FindUserByNick(nick string) (*User, error) {
 }
 
 const findUserSQL = `
-	SELECT ROWID, nick, role
+	SELECT ROWID, nick, role, active, last_active
 	FROM users
 	WHERE ROWID = ?
 `
@@ -132,6 +148,8 @@ func (s *Store) FindUser(rowID int64) (*User, error) {
 		&u.RowID,
 		&u.Nick,
 		&u.Role,
+		&u.Active,
+		&u.LastActive,
 	); err != nil {
 		return nil, err
 	}
