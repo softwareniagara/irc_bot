@@ -17,7 +17,7 @@ type User struct {
 
 const createUserSQL = `
 	CREATE TABLE IF NOT EXISTS users (
-		nick TEXT,
+		nick TEXT UNIQUE,
 		role INTEGER
 	)
 `
