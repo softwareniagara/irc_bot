@@ -13,24 +13,12 @@ type UserManager struct {
 	s *store.Store
 }
 
-func NewUserManager(s *store.Store) *UserManager {
-	return &UserManager{s}
-}
-
-func (um *UserManager) isAdmin(msg *hbot.Message) bool {
-	u, err := um.s.FindUserByNick(msg.From)
-	if err != nil {
-		return false
-	}
-	return u.Role == store.RoleAdmin
-}
-
-func (um *UserManager) Trigger() hbot.Trigger {
+func UserTrigger(s *store.Store) hbot.Trigger {
 	return hbot.Trigger{
 		Condition: HasPrefix("!user"),
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 
-			if !um.isAdmin(msg) {
+			if err := s.Authorized(msg.From, store.RoleAdmin); err != nil {
 				ReplyTo(bot, msg, "no can do")
 				return true
 			}
@@ -52,14 +40,14 @@ func (um *UserManager) Trigger() hbot.Trigger {
 				ErrorReply(bot, msg, err)
 				return true
 			}
-			nick = strings.Join(fset.Args(), " ")
+			nick = strings.TrimSpace(strings.Join(fset.Args(), " "))
 			if nick == "" {
 				bot.Reply(msg, "you need to provide a nick as a positional argument")
 				return true
 			}
 
 			if create {
-				if err := um.s.InsertUser(&store.User{
+				if err := s.InsertUser(&store.User{
 					Nick: nick,
 					Role: role,
 				}); err != nil {
@@ -71,12 +59,12 @@ func (um *UserManager) Trigger() hbot.Trigger {
 			}
 
 			if remove {
-				u, err := um.s.FindUserByNick(nick)
+				u, err := s.FindUserByNick(nick)
 				if err != nil {
 					ErrorReply(bot, msg, err)
 					return true
 				}
-				if err := um.s.RemoveUser(u.RowID); err != nil {
+				if err := s.RemoveUser(u.RowID); err != nil {
 					ErrorReply(bot, msg, err)
 					return true
 				}
@@ -85,13 +73,13 @@ func (um *UserManager) Trigger() hbot.Trigger {
 			}
 
 			if update {
-				u, err := um.s.FindUserByNick(nick)
+				u, err := s.FindUserByNick(nick)
 				if err != nil {
 					ErrorReply(bot, msg, err)
 					return true
 				}
 				u.Role = role
-				if err := um.s.UpdateUser(u); err != nil {
+				if err := s.UpdateUser(u); err != nil {
 					ErrorReply(bot, msg, err)
 					return true
 				}

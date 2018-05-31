@@ -33,7 +33,6 @@ func main() {
 	defer s.Close()
 
 	rd := NewReminderDB(s, channel)
-	um := NewUserManager(s)
 
 	bot, err := hbot.NewBot(host, nick)
 	if err != nil {
@@ -45,7 +44,7 @@ func main() {
 	bot.AddTrigger(TellTrigger)
 	bot.AddTrigger(EchoTrigger)
 	bot.AddTrigger(rd.Trigger())
-	bot.AddTrigger(um.Trigger())
+	bot.AddTrigger(UserTrigger(s))
 	bot.AddTrigger(Responder(nick))
 
 	go func() {
