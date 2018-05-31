@@ -11,7 +11,7 @@ import (
 
 func UserTrigger(s *store.Store) hbot.Trigger {
 	return hbot.Trigger{
-		Condition: HasPrefix("!user"),
+		Condition: HasCommand("!user"),
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 
 			if err := s.Authorized(msg.From, store.RoleAdmin); err != nil {

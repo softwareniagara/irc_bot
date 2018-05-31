@@ -38,7 +38,7 @@ func ReminderNotifyLoop(bot *hbot.Bot, s *store.Store, channel string) {
 
 func ReminderTrigger(s *store.Store) hbot.Trigger {
 	return hbot.Trigger{
-		Condition: HasPrefix("!remindme"),
+		Condition: HasCommand("!remindme"),
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 			if err := s.Authorized(msg.From, store.RoleUser, store.RoleUser); err != nil {
 				ErrorReply(bot, msg, err)
