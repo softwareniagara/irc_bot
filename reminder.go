@@ -10,46 +10,27 @@ import (
 
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/whyrusleeping/hellabot"
+
+	"github.com/softwareniagara/irc_bot/store"
 )
 
-type Reminder struct {
-	RowID   int64
-	Time    time.Time
-	Created time.Time
-	Nick    string
-	Msg     string
-}
-
 type ReminderDB struct {
-	db      *sql.DB
+	s       *store.Store
 	channel string
 }
 
-func OpenReminderDB(filename, channel string) (*ReminderDB, error) {
-	db, err := sql.Open("sqlite3", filename)
-	if err != nil {
-		return nil, err
-	}
-	rd := &ReminderDB{db, channel}
-	if err := rd.create(); err != nil {
-		_ = db.Close()
-		return nil, err
-	}
-	return rd, nil
-}
-
-func (rd *ReminderDB) Close() error {
-	return rd.db.Close()
+func NewReminderDB(s *store.Store, channel string) *ReminderDB {
+	return &ReminderDB{s, channel}
 }
 
 func (rd *ReminderDB) poll(bot *hbot.Bot) error {
-	r, err := rd.next(time.Now())
+	r, err := rd.s.NextReminder(time.Now())
 	if err != nil {
 		return err
 	}
 	msg := fmt.Sprintf("%s: reminder: %s", r.Nick, r.Msg)
 	bot.Notice(rd.channel, msg)
-	return rd.remove(r.RowID)
+	return rd.s.RemoveReminder(r.RowID)
 }
 
 func (rd *ReminderDB) Run(bot *hbot.Bot) {
@@ -75,7 +56,7 @@ func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
 		MultiLineReply(bot, msg, err.Error())
 		return true
 	}
-	if err := rd.insert(&Reminder{
+	if err := rd.s.InsertReminder(&store.Reminder{
 		Time:    time.Now().Add(dur),
 		Created: time.Now(),
 		Nick:    msg.From,
@@ -93,64 +74,4 @@ func (rd *ReminderDB) Trigger() hbot.Trigger {
 		Condition: rd.condition,
 		Action:    rd.action,
 	}
-}
-
-const createSQL = `
-	CREATE TABLE IF NOT EXISTS reminders (
-		time    TIMESTAMP,
-		created TIMESTAMP,
-		nick    TEXT,
-		msg     TEXT
-	)
-`
-
-func (rd *ReminderDB) create() error {
-	_, err := rd.db.Exec(createSQL)
-	return err
-}
-
-const insertSQL = `
-	INSERT INTO reminders (
-		time,
-		created,
-		nick,
-		msg
-	) VALUES (?, ?, ?, ?)
-`
-
-func (rd *ReminderDB) insert(r *Reminder) error {
-	_, err := rd.db.Exec(insertSQL, r.Time, r.Created, r.Nick, r.Msg)
-	return err
-}
-
-const nextSQL = `
-	SELECT ROWID, time, created, nick, msg
-	FROM reminders
-	WHERE time <= ?
-	ORDER BY time
-	LIMIT 1
-`
-
-func (rd *ReminderDB) next(now time.Time) (*Reminder, error) {
-	var r Reminder
-	if err := rd.db.QueryRow(nextSQL, now).Scan(
-		&r.RowID,
-		&r.Created,
-		&r.Time,
-		&r.Nick,
-		&r.Msg,
-	); err != nil {
-		return nil, err
-	}
-	return &r, nil
-}
-
-const removeSQL = `
-	DELETE FROM reminders
-	WHERE ROWID = ?
-`
-
-func (rd *ReminderDB) remove(rowID int64) error {
-	_, err := rd.db.Exec(removeSQL, rowID)
-	return err
 }
