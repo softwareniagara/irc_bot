@@ -70,6 +70,9 @@ func (u User) String() string {
 	if u.Active {
 		return fmt.Sprintf("nick=%s role=%s active=now")
 	}
+	if u.LastActive.IsZero() {
+		return fmt.Sprintf("nick=%s role=%s active=unknown")
+	}
 	return fmt.Sprintf("nick=%s role=%s active=%s ago", time.Since(u.LastActive))
 }
 
