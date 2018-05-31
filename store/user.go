@@ -46,6 +46,24 @@ func (s *Store) UpdateUser(u *User) error {
 	return err
 }
 
+const findUserByNickSQL = `
+	SELECT ROWID, nick, role
+	FROM users
+	WHERE nick = ?
+`
+
+func (s *Store) FindUserByNick(nick string) (*User, error) {
+	var u User
+	if err := s.db.QueryRow(findUserByNickSQL, nick).Scan(
+		&u.RowID,
+		&u.Nick,
+		&u.Role,
+	); err != nil {
+		return nil, err
+	}
+	return &u, nil
+}
+
 const findUserSQL = `
 	SELECT ROWID, nick, role
 	FROM users

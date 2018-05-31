@@ -19,7 +19,7 @@ var (
 
 func init() {
 	flag.StringVar(&host, "addr", "irc.freenode.net:6667", "irc server address")
-	flag.StringVar(&nick, "nick", "jimmy", "nick to use")
+	flag.StringVar(&nick, "nick", "jimmy_38545", "nick to use")
 	flag.StringVar(&channel, "chan", "#softwareniagara", "channel to join")
 	flag.StringVar(&dbname, "dbname", "bot.db", "database filename")
 	flag.Parse()
@@ -33,6 +33,7 @@ func main() {
 	defer s.Close()
 
 	rd := NewReminderDB(s, channel)
+	um := NewUserManager(s)
 
 	bot, err := hbot.NewBot(host, nick)
 	if err != nil {
@@ -44,6 +45,8 @@ func main() {
 	bot.AddTrigger(TellTrigger)
 	bot.AddTrigger(EchoTrigger)
 	bot.AddTrigger(rd.Trigger())
+	bot.AddTrigger(um.AddUserTrigger())
+	bot.AddTrigger(um.RemoveUserTrigger())
 	bot.AddTrigger(Responder(nick))
 
 	go func() {

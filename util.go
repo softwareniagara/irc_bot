@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"errors"
 	"flag"
+	"fmt"
 	"strings"
 
 	"github.com/kballard/go-shellquote"
@@ -35,6 +36,10 @@ func ParseFlags(msg *hbot.Message, fset *flag.FlagSet) error {
 	return err
 }
 
+func ErrorReply(bot *hbot.Bot, msg *hbot.Message, err error) {
+	MultiLineReply(bot, msg, err.Error())
+}
+
 func MultiLineReply(bot *hbot.Bot, msg *hbot.Message, s string) {
 	s = strings.Replace(s, "\t", "  ", -1)
 	r := strings.NewReader(s)
@@ -48,4 +53,8 @@ func HasPrefix(prefix string) func(*hbot.Bot, *hbot.Message) bool {
 	return func(bot *hbot.Bot, msg *hbot.Message) bool {
 		return strings.HasPrefix(msg.Content, prefix)
 	}
+}
+
+func ReplyTo(bot *hbot.Bot, msg *hbot.Message, s string) {
+	bot.Reply(msg, fmt.Sprintf("%s: %s", msg.From, s))
 }
