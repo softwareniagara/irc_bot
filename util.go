@@ -43,3 +43,9 @@ func MultiLineReply(bot *hbot.Bot, msg *hbot.Message, s string) {
 		bot.Reply(msg, ss.Text())
 	}
 }
+
+func HasPrefix(prefix string) func(*hbot.Bot, *hbot.Message) bool {
+	return func(bot *hbot.Bot, msg *hbot.Message) bool {
+		return strings.HasPrefix(msg.Content, prefix)
+	}
+}

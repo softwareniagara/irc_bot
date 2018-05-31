@@ -44,10 +44,6 @@ func (rd *ReminderDB) Run(bot *hbot.Bot) {
 	}
 }
 
-func (rd *ReminderDB) condition(bot *hbot.Bot, msg *hbot.Message) bool {
-	return strings.HasPrefix(msg.Content, "!remindme")
-}
-
 func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
 	var dur time.Duration
 	fset := flag.NewFlagSet("remindme", flag.ContinueOnError)
@@ -71,7 +67,7 @@ func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
 
 func (rd *ReminderDB) Trigger() hbot.Trigger {
 	return hbot.Trigger{
-		Condition: rd.condition,
+		Condition: HasPrefix("!remindme"),
 		Action:    rd.action,
 	}
 }
