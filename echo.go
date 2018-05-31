@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"fmt"
 	"strings"
 
 	"github.com/whyrusleeping/hellabot"
@@ -15,11 +14,11 @@ var EchoTrigger = hbot.Trigger{
 		fset := flag.NewFlagSet("echo", flag.ContinueOnError)
 		fset.IntVar(&num, "n", 1, "number of times to repeat")
 		if err := ParseFlags(msg, fset); err != nil {
-			MultiLineReply(bot, msg, err.Error())
+			ErrorReply(bot, msg, err)
 			return true
 		}
 		if num > 3 {
-			bot.Reply(msg, fmt.Sprintf("%s: fuck off", msg.From))
+			ReplyTo(bot, msg, "fuck off")
 			return true
 		}
 		response := strings.Join(fset.Args(), " ")

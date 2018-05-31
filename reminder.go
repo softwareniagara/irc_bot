@@ -49,7 +49,7 @@ func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
 	fset := flag.NewFlagSet("remindme", flag.ContinueOnError)
 	fset.DurationVar(&dur, "d", 0, "how long to wait before reminding")
 	if err := ParseFlags(msg, fset); err != nil {
-		MultiLineReply(bot, msg, err.Error())
+		ErrorReply(bot, msg, err)
 		return true
 	}
 	if err := rd.s.InsertReminder(&store.Reminder{
@@ -58,10 +58,10 @@ func (rd *ReminderDB) action(bot *hbot.Bot, msg *hbot.Message) bool {
 		Nick:    msg.From,
 		Msg:     strings.Join(fset.Args(), " "),
 	}); err != nil {
-		MultiLineReply(bot, msg, err.Error())
+		ErrorReply(bot, msg, err)
 		return true
 	}
-	bot.Reply(msg, fmt.Sprintf("%s: ok", msg.From))
+	ReplyTo(bot, msg, "ok")
 	return true
 }
 
