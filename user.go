@@ -27,6 +27,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 				create bool
 				remove bool
 				update bool
+				info   bool
 				role   = store.RoleUser
 			)
 
@@ -34,6 +35,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 			fset.BoolVar(&create, "create", false, "create a new user")
 			fset.BoolVar(&remove, "remove", false, "remove an existing user")
 			fset.BoolVar(&update, "update", false, "update existing user")
+			fset.BoolVar(&info, "info", false, "show user info")
 			fset.Var(&role, "role", "admin|user|idiot|banned")
 
 			if err := ParseFlags(msg, fset); err != nil {
@@ -84,6 +86,16 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 					return true
 				}
 				ReplyTo(bot, msg, "ok")
+				return true
+			}
+
+			if info {
+				u, err := s.FindUserByNick(nick)
+				if err != nil {
+					ErrorReply(bot, msg, err)
+					return true
+				}
+				ReplyTo(bot, msg, u.String())
 				return true
 			}
 

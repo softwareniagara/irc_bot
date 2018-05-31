@@ -66,6 +66,13 @@ type User struct {
 	LastActive time.Time
 }
 
+func (u User) String() string {
+	if u.Active {
+		return fmt.Sprintf("nick=%s role=%s active=now")
+	}
+	return fmt.Sprintf("nick=%s role=%s active=%s ago", time.Since(u.LastActive))
+}
+
 const createUserSQL = `
 	CREATE TABLE IF NOT EXISTS users (
 		nick        TEXT UNIQUE,
