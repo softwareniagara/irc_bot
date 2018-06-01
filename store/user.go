@@ -111,6 +111,9 @@ func (s *Store) NotBanned(nick string) error {
 func (s *Store) Authorized(nick string, roles ...Role) error {
 	u, err := s.FindUserByNick(nick)
 	if err != nil {
+		if err == sql.ErrNoRows {
+			return fmt.Errorf("%s is not a user", nick)
+		}
 		return err
 	}
 	for _, r := range roles {
