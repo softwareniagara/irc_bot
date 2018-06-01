@@ -20,10 +20,10 @@ func ActivityTrigger(s *store.Store) hbot.Trigger {
 				return false
 			}
 			switch msg.Command {
-			case "JOIN":
-				u.Active = true
 			case "PART", "QUIT":
 				u.Active = false
+			default:
+				u.Active = true
 			}
 			u.LastActive = time.Now()
 			if err := s.UpdateUser(u); err != nil {
