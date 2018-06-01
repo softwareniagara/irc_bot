@@ -6,6 +6,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io/ioutil"
 	"strings"
 
 	"github.com/kballard/go-shellquote"
@@ -27,6 +28,7 @@ func ParseFlags(msg *hbot.Message, fset *flag.FlagSet) error {
 	if len(args) == 0 {
 		args = []string{""}
 	}
+	fset.SetOutput(ioutil.Discard)
 	if err = fset.Parse(args[1:]); err == nil {
 		return nil
 	}
