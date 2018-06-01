@@ -118,7 +118,7 @@ func (s *Store) Authorized(nick string, roles ...Role) error {
 			return nil
 		}
 	}
-	return fmt.Errorf("invalid role: %s", u.Role)
+	return fmt.Errorf("%s users can't do that", u.Role)
 }
 
 func (s *Store) InsertUser(u *User) error {
