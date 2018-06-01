@@ -57,6 +57,7 @@ func main() {
 	bot.AddTrigger(ReminderTrigger(s))
 	bot.AddTrigger(UserTrigger(s))
 	bot.AddTrigger(Responder(nick))
+	bot.AddTrigger(HelpTrigger())
 
 	go func() {
 		// TODO: find a way to detect when the bot has
