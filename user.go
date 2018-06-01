@@ -20,11 +20,12 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 			}
 
 			var (
-				create bool
-				remove bool
-				update bool
-				info   bool
-				role   = store.RoleRegular
+				create   bool
+				remove   bool
+				update   bool
+				info     bool
+				role     = store.RoleRegular
+				greeting FlagString
 			)
 
 			fset := flag.NewFlagSet("", flag.ContinueOnError)
@@ -33,6 +34,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 			fset.BoolVar(&update, "update", false, "update existing user")
 			fset.BoolVar(&info, "info", false, "show user info")
 			fset.Var(&role, "role", "admin|regular|banned")
+			fset.Var(&greeting, "greeting", "greeting message")
 
 			if err := ParseFlags(msg, fset); err != nil {
 				ErrorReply(bot, msg, err)
@@ -46,8 +48,9 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 
 			if create {
 				if err := s.InsertUser(&store.User{
-					Nick: nick,
-					Role: role,
+					Nick:     nick,
+					Role:     role,
+					Greeting: greeting.Value,
 				}); err != nil {
 					ErrorReply(bot, msg, err)
 					return true
@@ -77,6 +80,9 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 					return true
 				}
 				u.Role = role
+				if !greeting.Empty {
+					u.Greeting = greeting.Value
+				}
 				if err := s.UpdateUser(u); err != nil {
 					ErrorReply(bot, msg, err)
 					return true

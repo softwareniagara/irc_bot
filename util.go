@@ -13,6 +13,21 @@ import (
 	"github.com/whyrusleeping/hellabot"
 )
 
+type FlagString struct {
+	Empty bool
+	Value string
+}
+
+func (fs FlagString) String() string {
+	return fs.Value
+}
+
+func (fs *FlagString) Set(s string) error {
+	fs.Value = s
+	fs.Empty = false
+	return nil
+}
+
 func Usage(fset *flag.FlagSet) string {
 	var usage bytes.Buffer
 	fset.SetOutput(&usage)
