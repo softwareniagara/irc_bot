@@ -8,10 +8,10 @@ import (
 	"github.com/softwareniagara/irc_bot/store"
 )
 
-func GreeterTrigger(s *store.Store) hbot.Trigger {
+func GreeterTrigger(s *store.Store, nick string) hbot.Trigger {
 	return hbot.Trigger{
 		Condition: func(bot *hbot.Bot, msg *hbot.Message) bool {
-			return msg.Command == "JOIN"
+			return msg.Command == "JOIN" && msg.From != nick
 		},
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
 			u, err := s.FindUserByNick(msg.From)

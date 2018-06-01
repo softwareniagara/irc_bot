@@ -14,8 +14,8 @@ import (
 )
 
 type FlagString struct {
-	Empty bool
-	Value string
+	HasValue bool
+	Value    string
 }
 
 func (fs FlagString) String() string {
@@ -24,7 +24,7 @@ func (fs FlagString) String() string {
 
 func (fs *FlagString) Set(s string) error {
 	fs.Value = s
-	fs.Empty = false
+	fs.HasValue = true
 	return nil
 }
 

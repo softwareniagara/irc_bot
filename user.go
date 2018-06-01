@@ -24,7 +24,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 				remove   bool
 				update   bool
 				info     bool
-				role     = store.RoleRegular
+				role     = store.RoleNone
 				greeting FlagString
 			)
 
@@ -49,7 +49,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 			if create {
 				if err := s.InsertUser(&store.User{
 					Nick:     nick,
-					Role:     role,
+					Role:     role.WithDefault(),
 					Greeting: greeting.Value,
 				}); err != nil {
 					ErrorReply(bot, msg, err)
@@ -79,8 +79,10 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 					ErrorReply(bot, msg, err)
 					return true
 				}
-				u.Role = role
-				if !greeting.Empty {
+				if role != store.RoleNone {
+					u.Role = role
+				}
+				if greeting.HasValue {
 					u.Greeting = greeting.Value
 				}
 				if err := s.UpdateUser(u); err != nil {

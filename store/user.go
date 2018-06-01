@@ -17,6 +17,13 @@ const (
 	RoleNone
 )
 
+func (r Role) WithDefault() Role {
+	if r == RoleInvalid || r == RoleNone {
+		return RoleRegular
+	}
+	return r
+}
+
 func (r Role) String() string {
 	switch r {
 	case RoleAdmin:
@@ -74,9 +81,9 @@ func (u User) String() string {
 	default:
 		active = fmt.Sprintf("%s ago", time.Since(u.LastActive))
 	}
-	greeting := "none"
-	if u.Greeting != "" {
-		greeting = u.Greeting
+	greeting := u.Greeting
+	if greeting == "" {
+		greeting = "none"
 	}
 	return fmt.Sprintf("nick=%s role=%s active=%s greeting=%s", u.Nick, u.Role, active, greeting)
 }
@@ -147,7 +154,7 @@ const updateUserSQL = `
 `
 
 func (s *Store) UpdateUser(u *User) error {
-	_, err := s.db.Exec(updateUserSQL, u.Nick, u.Role, u.Active, u.LastActive, u.RowID, u.Greeting)
+	_, err := s.db.Exec(updateUserSQL, u.Nick, u.Role, u.Active, u.LastActive, u.Greeting, u.RowID)
 	return err
 }
 
