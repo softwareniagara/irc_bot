@@ -1,6 +1,8 @@
 package store
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 )
@@ -10,8 +12,7 @@ type Role int
 const (
 	RoleInvalid Role = iota
 	RoleAdmin
-	RoleUser
-	RoleIdiot
+	RoleRegular
 	RoleBanned
 	RoleNone
 )
@@ -20,10 +21,8 @@ func (r Role) String() string {
 	switch r {
 	case RoleAdmin:
 		return "admin"
-	case RoleUser:
-		return "user"
-	case RoleIdiot:
-		return "idiot"
+	case RoleRegular:
+		return "regular"
 	case RoleBanned:
 		return "banned"
 	case RoleNone:
@@ -45,10 +44,8 @@ func RoleFromString(s string) Role {
 	switch s {
 	case "admin":
 		return RoleAdmin
-	case "user":
-		return RoleUser
-	case "idiot":
-		return RoleIdiot
+	case "regular":
+		return RoleRegular
 	case "banned":
 		return RoleBanned
 	case "none":
@@ -96,6 +93,20 @@ const insertUserSQL = `
 		last_active
 	) VALUES (?, ?, ?, ?)
 `
+
+func (s *Store) NotBanned(nick string) error {
+	u, err := s.FindUserByNick(nick)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+		return err
+	}
+	if u.Role == RoleBanned {
+		return errors.New("banned users can't do that")
+	}
+	return nil
+}
 
 func (s *Store) Authorized(nick string, roles ...Role) error {
 	u, err := s.FindUserByNick(nick)

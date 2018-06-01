@@ -24,7 +24,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 				remove bool
 				update bool
 				info   bool
-				role   = store.RoleUser
+				role   = store.RoleRegular
 			)
 
 			fset := flag.NewFlagSet("", flag.ContinueOnError)
@@ -32,7 +32,7 @@ func UserTrigger(s *store.Store) hbot.Trigger {
 			fset.BoolVar(&remove, "remove", false, "remove an existing user")
 			fset.BoolVar(&update, "update", false, "update existing user")
 			fset.BoolVar(&info, "info", false, "show user info")
-			fset.Var(&role, "role", "admin|user|idiot|banned")
+			fset.Var(&role, "role", "admin|regular|banned")
 
 			if err := ParseFlags(msg, fset); err != nil {
 				ErrorReply(bot, msg, err)

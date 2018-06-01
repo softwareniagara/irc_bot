@@ -40,7 +40,7 @@ func ReminderTrigger(s *store.Store) hbot.Trigger {
 	return hbot.Trigger{
 		Condition: HasCommand("!remindme"),
 		Action: func(bot *hbot.Bot, msg *hbot.Message) bool {
-			if err := s.Authorized(msg.From, store.RoleUser, store.RoleUser); err != nil {
+			if err := s.Authorized(msg.From, store.RoleAdmin, store.RoleRegular); err != nil {
 				ErrorReply(bot, msg, err)
 				return true
 			}
