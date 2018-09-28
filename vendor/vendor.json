@@ -1,0 +1,79 @@
+{
+	"comment": "",
+	"ignore": "",
+	"package": [
+		{
+			"checksumSHA1": "oCMedp3nQNZDPWBjjDQ5KOcE2zw=",
+			"path": "github.com/go-stack/stack",
+			"revision": "259ab82a6cad3992b4e21ff5cac294ccb06474bc",
+			"revisionTime": "2017-11-12T03:14:02Z"
+		},
+		{
+			"checksumSHA1": "3haYio0wTb9u1eqNnYEI+19qfmI=",
+			"path": "github.com/inconshreveable/log15",
+			"revision": "0decfc6c20d9ca0ad143b0e89dcaa20f810b4fb3",
+			"revisionTime": "2016-11-12T20:41:34Z"
+		},
+		{
+			"checksumSHA1": "pToEd6e/WFoAB75c1d5st2kVsEs=",
+			"path": "github.com/kballard/go-shellquote",
+			"revision": "d8ec1a69a250a17bb0e419c386eac1f3711dc142",
+			"revisionTime": "2015-08-10T07:47:51Z"
+		},
+		{
+			"checksumSHA1": "7HZc0BsNvOgzXTinTpPwdIS3jGc=",
+			"path": "github.com/mattn/go-colorable",
+			"revision": "ad5389df28cdac544c99bd7b9161a0b5b6ca9d1b",
+			"revisionTime": "2017-08-16T03:18:13Z"
+		},
+		{
+			"checksumSHA1": "StUo3PD2Kls2C4w0EFQhz9Za3Ak=",
+			"path": "github.com/mattn/go-isatty",
+			"revision": "a5cdd64afdee435007ee3e9f6ed4684af949d568",
+			"revisionTime": "2017-09-25T05:49:04Z"
+		},
+		{
+			"checksumSHA1": "e0Hd3LF5S7+OT3DVACTDTpixToI=",
+			"path": "github.com/mattn/go-sqlite3",
+			"revision": "d5ffb5c0cca8778699a929b236766f4a7af674e8",
+			"revisionTime": "2017-11-22T00:24:37Z"
+		},
+		{
+			"checksumSHA1": "oar3aLinFeXrdge5aTHkDBa2DX8=",
+			"path": "github.com/mudler/sendfd",
+			"revision": "f0fc74c138774ade8440c7c9a91280bb28171e4f",
+			"revisionTime": "2015-06-20T11:37:46Z"
+		},
+		{
+			"checksumSHA1": "QqXbt+D6rU7cDr+yfs0QBhqqBYY=",
+			"path": "github.com/whyrusleeping/hellabot",
+			"revision": "2e7ba8bc2730f795856a8ce87c800d88ae3ebd80",
+			"revisionTime": "2018-09-28T17:48:26Z"
+		},
+		{
+			"checksumSHA1": "wRLo86qqt/7IwI8X43IjXLvveU0=",
+			"path": "golang.org/x/net/context",
+			"revision": "4dfa2610cdf3b287375bbba5b8f2a14d3b01d8de",
+			"revisionTime": "2018-09-26T15:41:24Z"
+		},
+		{
+			"checksumSHA1": "dgZQAuMvwH3GEDY0oFoBtU/8wZA=",
+			"path": "golang.org/x/sys/unix",
+			"revision": "98c5dad5d1a0e8a73845ecc8897d0bd56586511d",
+			"revisionTime": "2018-08-06T14:38:27Z"
+		},
+		{
+			"checksumSHA1": "ePTIIPYdL6xS0i3Ck1vvmoNdbFU=",
+			"path": "gopkg.in/inconshreveable/log15.v2",
+			"revision": "0decfc6c20d9ca0ad143b0e89dcaa20f810b4fb3",
+			"revisionTime": "2016-11-12T20:41:34Z"
+		},
+		{
+			"checksumSHA1": "ny0jpgqRlvTkd0oaR0tAUgmVWYA=",
+			"path": "gopkg.in/inconshreveable/log15.v2/ext",
+			"revision": "0decfc6c20d9ca0ad143b0e89dcaa20f810b4fb3",
+			"revisionTime": "2016-11-12T20:41:34Z"
+		}
+	],
+	"rootPath": "github.com/softwareniagara/irc_bot"
+}
